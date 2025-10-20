@@ -1,0 +1,45 @@
+#pragma once
+
+/**
+ * @file version.h
+ * @brief HIDra Firmware Version Information
+ * 
+ * Auto-generated from GitVersion during build.
+ * DO NOT EDIT MANUALLY - This file is overwritten during build.
+ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Semantic Version Components
+#define FIRMWARE_VERSION_MAJOR @FIRMWARE_VERSION_MAJOR@
+#define FIRMWARE_VERSION_MINOR @FIRMWARE_VERSION_MINOR@
+#define FIRMWARE_VERSION_PATCH @FIRMWARE_VERSION_PATCH@
+#define FIRMWARE_VERSION_BUILD @FIRMWARE_VERSION_BUILD@
+
+// Version Strings
+#define FIRMWARE_VERSION_STRING "@FIRMWARE_VERSION_STRING@"
+#define FIRMWARE_VERSION_FULL "@FIRMWARE_VERSION_FULL@"
+#define FIRMWARE_VERSION_SEMVER "@FIRMWARE_VERSION_SEMVER@"
+
+// Build Metadata
+#define FIRMWARE_BUILD_TIMESTAMP "@FIRMWARE_BUILD_TIMESTAMP@"
+#define FIRMWARE_GIT_COMMIT "@FIRMWARE_GIT_COMMIT@"
+#define FIRMWARE_GIT_BRANCH "@FIRMWARE_GIT_BRANCH@"
+#define FIRMWARE_BUILD_CONFIG "@FIRMWARE_BUILD_CONFIG@"
+#define FIRMWARE_ESP_IDF_VERSION "@FIRMWARE_ESP_IDF_VERSION@"
+
+// Firmware Identity
+#define FIRMWARE_NAME "HIDra Slave Firmware"
+#define FIRMWARE_DESCRIPTION "ESP32-S3 USB HID Composite Device"
+
+// Version API
+const char* firmware_get_version(void);
+const char* firmware_get_version_full(void);
+const char* firmware_get_build_info(void);
+void firmware_print_version_info(void);
+
+#ifdef __cplusplus
+}
+#endif

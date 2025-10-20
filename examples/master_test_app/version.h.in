@@ -1,0 +1,28 @@
+#pragma once
+
+/**
+ * @file version.h
+ * @brief HIDra Master Test App Version Information
+ * 
+ * Auto-generated from GitVersion during build.
+ * DO NOT EDIT MANUALLY - This file is overwritten during build.
+ */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Version Strings
+#define APP_VERSION_SEMVER "@APP_VERSION_SEMVER@"
+#define APP_VERSION_FULL "@APP_VERSION_FULL@"
+#define APP_BUILD_TIMESTAMP "@APP_BUILD_TIMESTAMP@"
+#define APP_GIT_COMMIT "@APP_GIT_COMMIT@"
+#define APP_GIT_BRANCH "@APP_GIT_BRANCH@"
+
+// App Identity
+#define APP_NAME "HIDra Master Test Application"
+#define APP_DESCRIPTION "ESP32-S3 I2C Master for HIDra Testing"
+
+#ifdef __cplusplus
+}
+#endif

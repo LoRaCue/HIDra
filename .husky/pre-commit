@@ -1,0 +1,13 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Check code formatting
+echo "🔍 Checking code formatting..."
+if ! make format-check; then
+    echo ""
+    echo "❌ Code formatting check failed!"
+    echo "Fix with: make format"
+    exit 1
+fi
+
+echo "✅ Code formatting OK"
