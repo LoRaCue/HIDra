@@ -21,8 +21,8 @@ Thumbs.db
 node_modules/
 
 # Amazon Q CLI
-.amazonq/cli-todo-lists/
-.amazonq/.subagents/
+.amazonq/cli-todo-lists
+.amazonq/.subagents
 
 # Log files
 *.log
