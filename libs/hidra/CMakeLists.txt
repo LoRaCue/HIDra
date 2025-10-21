@@ -56,8 +56,8 @@ else()
     set(HIDRA_VERSION_MINOR "0")
     set(HIDRA_VERSION_PATCH "1")
     set(HIDRA_VERSION_BUILD "0")
-    set(HIDRA_VERSION_SEMVER "0.0.1-dev")
-    set(HIDRA_VERSION_FULL "0.0.1-dev")
+    set(HIDRA_VERSION_SEMVER "0.0.1")
+    set(HIDRA_VERSION_FULL "0.0.1")
     set(HIDRA_GIT_COMMIT "unknown")
     set(HIDRA_GIT_BRANCH "unknown")
     message(WARNING "GitVersion not found, using fallback version information")
@@ -70,7 +70,7 @@ set(HIDRA_BUILD_CONFIG "${CMAKE_BUILD_TYPE}")
 
 # Generate version.h from template
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/version.h.in"
+    "${CMAKE_CURRENT_LIST_DIR}/version.h.in"
     "${CMAKE_CURRENT_BINARY_DIR}/version.h"
     @ONLY
 )

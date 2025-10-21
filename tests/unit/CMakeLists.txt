@@ -8,7 +8,7 @@ if(GITVERSION_EXECUTABLE)
         ERROR_QUIET
     )
 else()
-    set(TEST_VERSION_SEMVER "0.0.1-dev")
+    set(TEST_VERSION_SEMVER "0.0.1")
 endif()
 
 cmake_minimum_required(VERSION 3.16)

@@ -1,40 +1,12 @@
 #pragma once
 
-/**
- * @file version.h
- * @brief HIDra Library Version Information
- * 
- * Auto-generated from GitVersion during build.
- * DO NOT EDIT MANUALLY - This file is overwritten during build.
- */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-// Semantic Version Components
-#define HIDRA_VERSION_MAJOR @HIDRA_VERSION_MAJOR@
-#define HIDRA_VERSION_MINOR @HIDRA_VERSION_MINOR@
-#define HIDRA_VERSION_PATCH @HIDRA_VERSION_PATCH@
-#define HIDRA_VERSION_BUILD @HIDRA_VERSION_BUILD@
-
-// Version Strings
-#define HIDRA_VERSION_STRING "@HIDRA_VERSION_STRING@"
-#define HIDRA_VERSION_FULL "@HIDRA_VERSION_FULL@"
-#define HIDRA_VERSION_SEMVER "@HIDRA_VERSION_SEMVER@"
-
-// Build Metadata
-#define HIDRA_BUILD_TIMESTAMP "@HIDRA_BUILD_TIMESTAMP@"
-#define HIDRA_GIT_COMMIT "@HIDRA_GIT_COMMIT@"
-#define HIDRA_GIT_BRANCH "@HIDRA_GIT_BRANCH@"
-#define HIDRA_BUILD_CONFIG "@HIDRA_BUILD_CONFIG@"
-
-// Version API
-const char* hidra_get_version(void);
-const char* hidra_get_version_full(void);
-const char* hidra_get_build_info(void);
-void hidra_print_version_info(void);
-
-#ifdef __cplusplus
-}
-#endif
+#define HIDRA_VERSION_MAJOR             @HIDRA_VERSION_MAJOR@
+#define HIDRA_VERSION_MINOR             @HIDRA_VERSION_MINOR@
+#define HIDRA_VERSION_PATCH             @HIDRA_VERSION_PATCH@
+#define HIDRA_VERSION_BUILD             @HIDRA_VERSION_BUILD@
+#define HIDRA_VERSION_SEMVER            "@HIDRA_VERSION_SEMVER@"
+#define HIDRA_VERSION_FULL              "@HIDRA_VERSION_FULL@"
+#define HIDRA_GIT_COMMIT                "@HIDRA_GIT_COMMIT@"
+#define HIDRA_GIT_BRANCH                "@HIDRA_GIT_BRANCH@"
+#define HIDRA_BUILD_TIMESTAMP           "@HIDRA_BUILD_TIMESTAMP@"
+#define HIDRA_BUILD_CONFIG              "@HIDRA_BUILD_CONFIG@"

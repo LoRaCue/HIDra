@@ -49,6 +49,8 @@ static void generate_serial_from_mac(char *serial_out);
 static void factory_reset_check(void);
 static void i2c_task(void *pvParameters);
 static void usb_task(void *pvParameters);
+static void handle_hid_report(uint8_t reg_addr, const uint8_t *data, size_t len);
+static void handle_config_command(uint8_t reg_addr, const uint8_t *data, size_t len);
 static void handle_i2c_command(uint8_t reg_addr, const uint8_t *data, size_t len);
 static void set_status_bit(uint8_t bit);
 static void clear_status_bit(uint8_t bit);
@@ -236,56 +238,46 @@ static void usb_task(void *pvParameters)
     }
 }
 
-static void handle_i2c_command(uint8_t reg_addr, const uint8_t *data, size_t len)
+static void handle_hid_report(uint8_t reg_addr, const uint8_t *data, size_t len)
 {
-    // Clear previous status
-    g_status_register = 0;
-
+    // Check if interface is enabled
+    uint8_t interface_bit = 0;
     switch (reg_addr) {
-        case HIDRA_REG_KEYBOARD:
-        case HIDRA_REG_MOUSE:
-        case HIDRA_REG_GAMEPAD:
-        case HIDRA_REG_JOYSTICK:
-        case HIDRA_REG_CONSUMER:
-        case HIDRA_REG_PEN:
-        case HIDRA_REG_TOUCHSCREEN:
-        case HIDRA_REG_TOUCHPAD: {
-            // Check if interface is enabled
-            uint8_t interface_bit = 0;
-            switch (reg_addr) {
-                case HIDRA_REG_KEYBOARD: interface_bit = LAYOUT_KEYBOARD; break;
-                case HIDRA_REG_MOUSE: interface_bit = LAYOUT_MOUSE; break;
-                case HIDRA_REG_GAMEPAD: interface_bit = LAYOUT_GAMEPAD; break;
-                case HIDRA_REG_JOYSTICK: interface_bit = LAYOUT_JOYSTICK; break;
-                case HIDRA_REG_CONSUMER: interface_bit = LAYOUT_CONSUMER; break;
-                case HIDRA_REG_PEN: interface_bit = LAYOUT_PEN; break;
-                case HIDRA_REG_TOUCHSCREEN: interface_bit = LAYOUT_TOUCHSCREEN; break;
-                case HIDRA_REG_TOUCHPAD: interface_bit = LAYOUT_TOUCHPAD; break;
-            }
-            
-            if (!(g_config.composite_layout & interface_bit)) {
-                set_status_bit(ERROR_INTERFACE_DISABLED);
-                return;
-            }
+        case HIDRA_REG_KEYBOARD: interface_bit = LAYOUT_KEYBOARD; break;
+        case HIDRA_REG_MOUSE: interface_bit = LAYOUT_MOUSE; break;
+        case HIDRA_REG_GAMEPAD: interface_bit = LAYOUT_GAMEPAD; break;
+        case HIDRA_REG_JOYSTICK: interface_bit = LAYOUT_JOYSTICK; break;
+        case HIDRA_REG_CONSUMER: interface_bit = LAYOUT_CONSUMER; break;
+        case HIDRA_REG_PEN: interface_bit = LAYOUT_PEN; break;
+        case HIDRA_REG_TOUCHSCREEN: interface_bit = LAYOUT_TOUCHSCREEN; break;
+        case HIDRA_REG_TOUCHPAD: interface_bit = LAYOUT_TOUCHPAD; break;
+    }
 
-            if (len > MAX_REPORT_SIZE) {
-                set_status_bit(ERROR_PAYLOAD_TOO_LARGE);
-                return;
-            }
+    if (!(g_config.composite_layout & interface_bit)) {
+        set_status_bit(ERROR_INTERFACE_DISABLED);
+        return;
+    }
 
-            // Queue HID report
-            hid_report_t report = {
-                .interface = reg_addr,
-                .report_size = len
-            };
-            memcpy(report.report, data, len);
-            
-            if (xQueueSend(g_hid_queue, &report, 0) == pdTRUE) {
-                set_status_bit(STATUS_OK);
-            }
-            break;
-        }
+    if (len > MAX_REPORT_SIZE) {
+        set_status_bit(ERROR_PAYLOAD_TOO_LARGE);
+        return;
+    }
 
+    // Queue HID report
+    hid_report_t report = {
+        .hid_register = reg_addr,
+        .report_size = len
+    };
+    memcpy(report.report, data, len);
+
+    if (xQueueSend(g_hid_queue, &report, 0) == pdTRUE) {
+        set_status_bit(STATUS_OK);
+    }
+}
+
+static void handle_config_command(uint8_t reg_addr, const uint8_t *data, size_t len)
+{
+    switch (reg_addr) {
         case CONFIG_USB_IDS_REG:
             if (len == 4) {
                 g_config.usb_vid = (data[1] << 8) | data[0];
@@ -339,6 +331,20 @@ static void handle_i2c_command(uint8_t reg_addr, const uint8_t *data, size_t len
         default:
             set_status_bit(ERROR_UNKNOWN_REGISTER);
             break;
+    }
+}
+
+static void handle_i2c_command(uint8_t reg_addr, const uint8_t *data, size_t len)
+{
+    // Clear previous status
+    g_status_register = 0;
+
+    if (reg_addr >= HIDRA_REG_KEYBOARD && reg_addr <= HIDRA_REG_TOUCHPAD) {
+        handle_hid_report(reg_addr, data, len);
+    } else if (reg_addr >= CONFIG_USB_IDS_REG && reg_addr <= CONFIG_I2C_ADDR_REG) {
+        handle_config_command(reg_addr, data, len);
+    } else {
+        set_status_bit(ERROR_UNKNOWN_REGISTER);
     }
 }
 
